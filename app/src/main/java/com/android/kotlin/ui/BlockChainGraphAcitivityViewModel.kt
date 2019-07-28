@@ -1,13 +1,13 @@
 package com.android.kotlin.ui
 
 import com.android.kotlin.model.BitcoinPriceItem
+import com.android.kotlin.utils.BaseSchedulerProvider
 import com.android.kotlin.utils.DataManager
-import com.android.kotlin.utils.SchedulerProvider
 import io.reactivex.Observable
 import javax.inject.Inject
 
-class MainActivityViewModel @Inject constructor(private var dataManager: DataManager,
-                                        private var schedulerProvider: SchedulerProvider) {
+class BlockChainGraphActivityViewModel @Inject constructor(private var dataManager: DataManager,
+                                                           private var schedulerProvider: BaseSchedulerProvider) {
 
     var loading: Boolean? = null
 
@@ -21,7 +21,6 @@ class MainActivityViewModel @Inject constructor(private var dataManager: DataMan
         return dataManager.getMarketPrice(timeSpan,rollingAverage)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .doOnError {  }
                 .map { result -> result }
 
     }

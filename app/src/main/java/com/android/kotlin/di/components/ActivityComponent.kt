@@ -4,7 +4,6 @@ import com.android.kotlin.di.PerActivity
 import com.android.kotlin.di.modules.ActivityModule
 import com.android.kotlin.di.modules.NetworkModule
 import com.android.kotlin.ui.BlockChainGraphActivity
-import com.android.kotlin.ui.MainActivity
 import dagger.Component
 
 @PerActivity
