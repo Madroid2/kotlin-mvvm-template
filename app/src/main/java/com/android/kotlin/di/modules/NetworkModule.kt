@@ -1,5 +1,6 @@
 package com.android.kotlin.di.modules
 
+import com.android.Util.BuildConfig
 import com.android.kotlin.utils.ApiInterface
 import dagger.Module
 import dagger.Provides
@@ -14,7 +15,7 @@ class NetworkModule {
     @Singleton
     fun providesRetrofit(): Retrofit {
         return Retrofit.Builder()
-                .baseUrl("https://api.blockchain.info/charts/")
+                .baseUrl(BuildConfig.DEFAULT_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()

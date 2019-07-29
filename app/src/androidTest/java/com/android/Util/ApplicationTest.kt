@@ -18,6 +18,6 @@ class ApplicationTest {
 
     @Test
     fun testAdd() {
-        onView(withId(R.id.activity_main_button)).perform(click())
+        onView(withId(R.id.activity_main_show_trends_button)).perform(click())
     }
 }

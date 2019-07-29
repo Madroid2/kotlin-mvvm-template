@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/llNoConnection"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="16dp"
     android:background="@android:color/white"
     android:orientation="vertical"
     android:visibility="visible">
 
     <ImageView
-        android:id="@+id/imgError"
+        android:id="@+id/layout_no_conn_error_image_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_error"

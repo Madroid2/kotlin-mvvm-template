@@ -27,13 +27,13 @@ class BlockChainGraphActivity : AppCompatActivity() {
 
     @Inject
     lateinit var blockChainGraphViewModel: BlockChainGraphActivityViewModel
-    private lateinit var compositeDisposable: CompositeDisposable
-    private var disposable: Disposable? = null
-    private var noConnectionView: View? = null
-    private var progressBar: ProgressBar? = null
-    private var graphView: GraphView? = null
-    private var blockChainDescTextView: TextView? = null
-    private var blockChainMarketCurrencyTextView: TextView? = null
+    private lateinit var mCompositeDisposable: CompositeDisposable
+    private var mDisposable: Disposable? = null
+    private var mNoConnectionView: View? = null
+    private var mProgressBar: ProgressBar? = null
+    private var mGraphView: GraphView? = null
+    private var mBlockChainDescTextView: TextView? = null
+    private var mBlockChainMarketCurrencyTextView: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,15 +46,15 @@ class BlockChainGraphActivity : AppCompatActivity() {
         activityComponent.inject(this)
         initializeUI()
         executeBitcoinMarketPriceApi()
-        compositeDisposable = CompositeDisposable()
+        mCompositeDisposable = CompositeDisposable()
     }
 
     private fun initializeUI() {
-        progressBar = findViewById(R.id.activity_block_chain_progress_bar)
-        noConnectionView = findViewById(R.id.activity_block_chain_graph_no_conn_view)
-        graphView = findViewById(R.id.activity_block_chain_graph)
-        blockChainMarketCurrencyTextView = findViewById(R.id.activity_block_chain_title_text_view)
-        blockChainDescTextView = findViewById(R.id.activity_block_chain_desc_text_view)
+        mProgressBar = findViewById(R.id.activity_block_chain_progress_bar)
+        mNoConnectionView = findViewById(R.id.activity_block_chain_graph_no_conn_view)
+        mGraphView = findViewById(R.id.activity_block_chain_graph)
+        mBlockChainMarketCurrencyTextView = findViewById(R.id.activity_block_chain_title_text_view)
+        mBlockChainDescTextView = findViewById(R.id.activity_block_chain_desc_text_view)
         val mRetryBtn: Button = findViewById(R.id.layout_no_conn_btnRetry)
         mRetryBtn.setOnClickListener {
             executeBitcoinMarketPriceApi()
@@ -62,26 +62,26 @@ class BlockChainGraphActivity : AppCompatActivity() {
     }
 
     private fun executeBitcoinMarketPriceApi() {
-        progressBar?.visibility = View.VISIBLE
-        disposable = blockChainGraphViewModel.provideBitcoinPrice("5weeks", "8hours")
+        mProgressBar?.visibility = View.VISIBLE
+        mDisposable = blockChainGraphViewModel.provideBitcoinPrice("5weeks", "8hours")
                 ?.subscribe(
                         { result ->
                             setPageAndGraphData(result)
-                            noConnectionView?.visibility = View.GONE
-                            progressBar?.visibility = View.GONE
+                            mNoConnectionView?.visibility = View.GONE
+                            mProgressBar?.visibility = View.GONE
                             blockChainGraphViewModel.setIsLoading(false)
                         },
                         { e ->
                             e.printStackTrace()
-                            noConnectionView?.visibility = View.VISIBLE
-                            progressBar?.visibility = View.GONE
+                            mNoConnectionView?.visibility = View.VISIBLE
+                            mProgressBar?.visibility = View.GONE
                         }
                 )
     }
 
     private fun setPageAndGraphData(result: BitcoinPriceItem) {
-        blockChainMarketCurrencyTextView?.text = result.name
-        blockChainDescTextView?.text = result.description
+        mBlockChainMarketCurrencyTextView?.text = result.name
+        mBlockChainDescTextView?.text = result.description
         val items: Array<DataPoint> = Array(result.values!!.size)
         { index ->
             val stamp = Timestamp(result.values?.get(index)!!.x * 1000)
@@ -89,21 +89,21 @@ class BlockChainGraphActivity : AppCompatActivity() {
             DataPoint(date, result.values?.get(index)?.y!!.toDouble())
         }
         val series = LineGraphSeries(items)
-        graphView?.addSeries(series)
-        graphView?.getGridLabelRenderer()?.labelFormatter = DateAsXAxisLabelFormatter(this)
+        mGraphView?.addSeries(series)
+        mGraphView?.getGridLabelRenderer()?.labelFormatter = DateAsXAxisLabelFormatter(this)
     }
 
     override fun onPause() {
         super.onPause()
-        if (compositeDisposable.size() > 0) {
-            compositeDisposable.clear()
+        if (mCompositeDisposable.size() > 0) {
+            mCompositeDisposable.clear()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        if (disposable != null) {
-            compositeDisposable.add(disposable!!)
+        if (mDisposable != null) {
+            mCompositeDisposable.add(mDisposable!!)
         }
     }
 }
